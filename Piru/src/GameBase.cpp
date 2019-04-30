@@ -8,14 +8,14 @@ Game::Game() {
 
 void Game::Start() {
 	init();
-	this->changeMusic(states[0]->music);
+	//this->changeMusic(states[0]->music);
 	GameLoop();
 }
 
 // loop deals with changing states
 void Game::GameLoop() {
 
-	music.play();
+	//music.play();
 	while (window.isOpen()) {
 
 		sf::Event event;
@@ -40,7 +40,7 @@ void Game::changeState(unsigned int ID) {
 		exit(0);
 	}
 	this->currState = ID;
-	this->changeMusic(states[ID]->music);
+	//this->changeMusic(states[ID]->music);
 }
 
 void Game::addState(std::shared_ptr<GameState> state) {
