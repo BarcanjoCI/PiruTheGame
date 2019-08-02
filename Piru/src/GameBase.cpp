@@ -25,7 +25,7 @@ void Game::GameLoop() {
 			states[currState]->update(event);
 		}
 		states[currState]->updateKeyboard();
-		window.clear(sf::Color::Black);
+		window.clear(sf::Color::White);
 
 		// Render Everything 
 		states[currState]->render(&window);

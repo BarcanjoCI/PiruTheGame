@@ -1,17 +1,17 @@
 #include "PiruGame/PiruGameState.h"
-#include "PiruGame/GameObjects/Player.h"
-#include "PiruGame/GameObjects/Obstacle.h"
+#include "PiruGame/GameObjects/GameObjects.h"
 
 PiruGameState::PiruGameState(Game *game) : GameState(game){
-	player = std::make_shared<Player>();
+	player = std::make_shared<Player>(this);
 	objects.push_back(player);
-	objects.push_back(std::make_shared<Obstacle>(sf::Vector2f(500, 400)));
-	objects.push_back(std::make_shared<Obstacle>(sf::Vector2f(100, 250)));
+	camera = Camera(player, &world);
+	objects.push_back(std::make_shared<Obstacle>(sf::Vector2f(500, 400), this));
+	objects.push_back(std::make_shared<Obstacle>(sf::Vector2f(100, 250), this));
 }
 
 void PiruGameState::render(sf::RenderWindow *window) {
-	for (auto it = objects.begin(); it != objects.end(); it++)
-		(*it)->render(window);
+	for (int i = 0; i < objects.size(); i++)
+		objects[i]->render(window);
 }
 
 void PiruGameState::update(sf::Event event) {
@@ -26,7 +26,6 @@ void PiruGameState::updateKeyboard() {
 		}
 	}
 
-	for (auto it = objects.begin(); it != objects.end(); it++) {
-		(*it)->update();
-	}
+	for (int i = 0; i < objects.size(); i++)
+		objects[i]->update();
 }

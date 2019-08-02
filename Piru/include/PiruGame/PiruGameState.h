@@ -1,6 +1,7 @@
 #pragma once
 #include "GameBase.h"
-#include "GameObjects/GameObject.h"
+#include "GameObjects/Player.h"
+#include "Camera.h"
 
 /*
 This class is the main game state - Where the game is going to play out.
@@ -14,4 +15,6 @@ public:
 
 	std::vector<std::shared_ptr<GameObject>> objects;
 	std::shared_ptr<GameObject> player;
+	World world;
+	Camera camera;
 };

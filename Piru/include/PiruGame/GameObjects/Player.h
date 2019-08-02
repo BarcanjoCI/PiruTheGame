@@ -1,16 +1,26 @@
 #pragma once
-#include "GameObject.h"
-#include "PiruGame/GameObjects/Obstacle.h"
+#include "PiruGame/GameObjects/GameObjects.h"
 
-class Player : public GameObject {
+class Player;
+
+class BlueBlast : public Ability {
 public:
-	Player();
+	BlueBlast(Player*);
 	void render(sf::RenderWindow *window);
 	void update();
 	void handleCollision(std::weak_ptr<GameObject>);
+	Player *player;
+};
 
-	sf::Texture testT;
-	sf::Sprite testS;
+class Player : public Character {
+public:
+	Player(PiruGameState*);
+	void render(sf::RenderWindow *window);
+	void update();
+	void handleCollision(std::weak_ptr<GameObject>);
+	
+	int lastSpellUsed;
+	bool casting;
 	float gravity;
 	float ground;
 	std::weak_ptr<GameObject> onPlat;
