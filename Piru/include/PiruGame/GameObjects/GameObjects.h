@@ -8,6 +8,7 @@ public:
 	sf::Vector2f pos;
 	sf::Vector2f vel;
 	float speed;
+	sf::FloatRect hitbox;
 
 	PiruGameState* game;
 

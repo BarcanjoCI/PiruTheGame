@@ -10,6 +10,7 @@ BlueBlast::BlueBlast(Player* player) {
 
 	texture.loadFromFile("BlueBlast.png");
 	sprite.setTexture(texture);
+	hitbox = sprite.getGlobalBounds();
 
 	if (player->facing == LEFT) {
 		pos=sf::Vector2f(player->pos.x - 20, player->pos.y + 8);
@@ -57,6 +58,7 @@ Player::Player(PiruGameState* game) {
 	sprite.setTexture(texture);
 	sprite.setTextureRect(sf::IntRect(0, 0, 9, 16));
 	sprite.scale(2.0f, 2.0f);
+	hitbox = sprite.getGlobalBounds();
 }
 
 void Player::render(sf::RenderWindow *window) {
@@ -104,10 +106,8 @@ void Player::update() {
 	vel = sf::Vector2f(0, 0);
 
 	if (auto tmp = onPlat.lock()) {
-		sf::FloatRect hitbox1 = sprite.getGlobalBounds();
-		sf::FloatRect hitbox2 = tmp->model.getGlobalBounds();
 
-		if (pos.x + hitbox1.width < tmp->pos.x || pos.x > tmp->pos.x + hitbox2.width) {
+		if (pos.x + hitbox.width < tmp->pos.x || pos.x > tmp->pos.x + tmp->hitbox.width) {
 			onPlat.reset();
 			ground = 400;
 		}
@@ -117,8 +117,8 @@ void Player::update() {
 		if (cooldowns.at(0).getElapsedTime().asSeconds() > 0.5) {
 			if (facing == RIGHT) {
 				sprite.setTextureRect(sf::IntRect(10, 0, 18, 16));
-				pos.x -= 20;
 			}
+
 			else if(facing == LEFT)
 				sprite.setTextureRect(sf::IntRect(28, 0, -18, 16));
 			game->objects.push_back(std::make_shared<BlueBlast>(this));
@@ -139,31 +139,28 @@ void Player::update() {
 
 void Player::handleCollision(std::weak_ptr<GameObject> other) {
 	if (auto tmp = other.lock()) {
-		sf::FloatRect hitbox1 = sprite.getGlobalBounds();
-		sf::FloatRect hitbox2 = tmp->model.getGlobalBounds();
-
 		if (typeid(*tmp) == typeid(Obstacle)) {
 
-			if (pos.x + hitbox1.width > tmp->pos.x && pos.x < tmp->pos.x + hitbox2.width) {
+			if (pos.x + hitbox.width > tmp->pos.x && pos.x < tmp->pos.x + tmp->hitbox.width) {
 
-				if (pos.y + hitbox1.height < tmp->pos.y && pos.y < tmp->pos.y) {
-						ground = tmp->pos.y - hitbox1.height;
+				if (pos.y + hitbox.height < tmp->pos.y && pos.y < tmp->pos.y) {
+						ground = tmp->pos.y - hitbox.height;
 						onPlat = other.lock();
 				}
 
-				else if (pos.y < tmp->pos.y + hitbox2.height && pos.y > tmp->pos.y) {
-					pos.y = tmp->pos.y + hitbox2.height;
+				else if (pos.y < tmp->pos.y + tmp->hitbox.height && pos.y > tmp->pos.y) {
+					pos.y = tmp->pos.y + tmp->hitbox.height;
 					jumpForce = -0.1;
 				}
 			}
 
-			else if (pos.y > tmp->pos.y - hitbox1.height -5 && pos.y < tmp->pos.y + hitbox2.height + hitbox1.height + 5){
-				if (pos.x + hitbox1.width + 5 > tmp->pos.x && pos.x < tmp->pos.x + hitbox2.width) {
-					pos.x = tmp->pos.x - hitbox1.width - 5;
+			else if (pos.y > tmp->pos.y - hitbox.height -5 && pos.y < tmp->pos.y + tmp->hitbox.height + hitbox.height + 5){
+				if (pos.x + hitbox.width + 5 > tmp->pos.x && pos.x < tmp->pos.x + tmp->hitbox.width) {
+					pos.x = tmp->pos.x - hitbox.width - 5;
 				}
 
-				else if (pos.x < tmp->pos.x + hitbox2.width + 5 && pos.x + hitbox1.width > tmp->pos.x + hitbox2.width) {
-					pos.x = tmp->pos.x + 5 + hitbox2.width;
+				else if (pos.x < tmp->pos.x + tmp->hitbox.width + 5 && pos.x + hitbox.width > tmp->pos.x + tmp->hitbox.width) {
+					pos.x = tmp->pos.x + 5 + tmp->hitbox.width;
 				}
 			}
 		}
