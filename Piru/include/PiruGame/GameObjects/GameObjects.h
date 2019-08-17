@@ -17,7 +17,6 @@ public:
 	sf::Sprite sprite;
 	bool visible;
 
-	void isVisible();
 	virtual void render(sf::RenderWindow *window) = 0;
 	virtual void update() = 0;
 	virtual void handleCollision(std::weak_ptr<GameObject>) = 0;

@@ -91,8 +91,11 @@ void Player::update() {
 
 	vel.y -= jumpForce;
 	pos += vel;
-	//sprite.setPosition(pos);
-	game->camera.worldPos = sf::Vector2f(pos.x - 400, pos.y -400);
+
+	if (game->camera.locked)
+		sprite.setPosition(pos);
+	else
+		game->camera.worldPos = sf::Vector2f(pos.x - 400, pos.y -400);
 	
 	if (pos.y < ground) {
 		jumpForce -= gravity;

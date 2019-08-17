@@ -5,10 +5,10 @@ Camera::Camera() {
 	height = 600;
 }
 
-Camera::Camera(std::weak_ptr<GameObject>, World* world) {
+Camera::Camera(std::weak_ptr<GameObject>) {
 	this->player = player;
-	this->world = world;
 	width = 800;
 	height = 600;
+	locked = false;
 	worldPos = sf::Vector2f(0, 0);
 }

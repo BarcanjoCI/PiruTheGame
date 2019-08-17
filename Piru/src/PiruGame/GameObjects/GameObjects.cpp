@@ -1,9 +1,6 @@
 #include "PiruGame/GameObjects/GameObjects.h"
 #include "PiruGame/PiruGameState.h"
 
-void GameObject::isVisible() {
-}
-
 // Obstacle Function definitions
 Obstacle::Obstacle() {
 }
