@@ -16,6 +16,7 @@ public:
 	sf::Texture texture;
 	sf::Sprite sprite;
 	bool visible;
+	bool alive;
 
 	virtual void render(sf::RenderWindow *window) = 0;
 	virtual void update() = 0;
@@ -50,6 +51,10 @@ public:
 	float maxHP, currHP, maxMana, currMana;
 	Facing facing;
 	float jumpForce;
+};
+
+class Enemy : public Character {
+
 };
 
 

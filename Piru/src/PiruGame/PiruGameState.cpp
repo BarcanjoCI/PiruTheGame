@@ -1,6 +1,7 @@
 #include "PiruGame/PiruGameState.h"
 #include "PiruGame/GameObjects/GameObjects.h"
 #include <iostream>
+#include <algorithm>
 
 PiruGameState::PiruGameState(Game *game) : GameState(game){
 	player = std::make_shared<Player>(this);
@@ -11,6 +12,19 @@ PiruGameState::PiruGameState(Game *game) : GameState(game){
 }
 
 void PiruGameState::render(sf::RenderWindow *window) {
+	// Artifical ground and sky just for now
+	sf::RectangleShape sky, ground;
+	sky.setSize(sf::Vector2f(800, 2200 + player->hitbox.height));
+	sky.setFillColor(sf::Color::Cyan);
+	sky.setPosition(0, 0 + camera.worldPos.y);
+
+	ground.setSize(sf::Vector2f(800, 600));
+	ground.setFillColor(sf::Color::Green);
+	ground.setPosition(0, 400 + player->hitbox.height - camera.worldPos.y);
+	window->draw(sky);
+	window->draw(ground);
+	
+
 	for (int i = 0; i < objects.size(); i++) {
 		objects[i]->visible = false;
 		if (objects[i]->pos.x < camera.worldPos.x + 800) { // x pos is smaller than left limit
@@ -38,6 +52,10 @@ void PiruGameState::updateKeyboard() {
 		}
 	}
 
-	for (int i = 0; i < objects.size(); i++)
+	for (int i = 0; i < objects.size(); i++) {
 		objects[i]->update();
+		if (!objects[i]->alive)
+			objects.erase(std::remove(objects.begin(), objects.end(), objects[i]), objects.end());
+	}
+		
 }
